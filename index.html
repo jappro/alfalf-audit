@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alfalf AI — Campaign Audit</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080e0c;
+  --bg2: #0d1612;
+  --bg3: #111e19;
+  --card: #0f1a15;
+  --border: rgba(46,204,113,0.1);
+  --border2: rgba(46,204,113,0.2);
+  --green: #2ECC71;
+  --green2: #1db954;
+  --green-dim: rgba(46,204,113,0.12);
+  --teal: #0F7B6C;
+  --red: #ef4444;
+  --amber: #f59e0b;
+  --text: #e8f5ee;
+  --text2: #7fa08a;
+  --text3: #3d6652;
+  --mono: 'JetBrains Mono', monospace;
+  --sans: 'DM Sans', sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;padding:0 0 80px}
+.page{max-width:760px;margin:0 auto;padding:0 20px}
+
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:24px 0 40px;border-bottom:1px solid var(--border);margin-bottom:36px}
+.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo{width:30px;height:30px;background:linear-gradient(135deg,#2ECC71,#0F7B6C);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:#080e0c}
+.nav-name{font-weight:700;font-size:0.95rem;color:var(--text)}
+.nav-tag{font-family:var(--mono);font-size:0.62rem;color:var(--text3);background:var(--card);border:1px solid var(--border);border-radius:4px;padding:4px 10px;letter-spacing:1px;text-transform:uppercase}
+
+/* HEADER */
+.campaign-title{font-size:clamp(1.7rem,4vw,2.4rem);font-weight:700;letter-spacing:-0.5px;line-height:1.1;margin-bottom:14px}
+.campaign-meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.tag{font-family:var(--mono);font-size:0.67rem;padding:4px 10px;border-radius:4px;font-weight:500}
+.tag-type{background:var(--green-dim);color:var(--green);border:1px solid var(--border2)}
+.tag-platform{background:rgba(15,123,108,0.12);color:#4ecdc4;border:1px solid rgba(78,205,196,0.2)}
+.tag-duration{background:var(--bg3);color:var(--text2);border:1px solid var(--border)}
+.campaign-id{font-family:var(--mono);font-size:0.65rem;color:var(--text3);margin-bottom:32px}
+
+/* SCORE HERO */
+.score-hero{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:28px;display:flex;align-items:center;gap:28px;margin-bottom:20px}
+.score-circle{flex-shrink:0;width:88px;height:88px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative;background:var(--bg3)}
+.score-ring{position:absolute;inset:0;border-radius:50%}
+.score-num{font-family:var(--mono);font-size:1.4rem;font-weight:600;color:var(--green);position:relative;z-index:1}
+.score-label{font-family:var(--mono);font-size:0.62rem;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-bottom:5px}
+.score-verdict{font-size:1rem;font-weight:700;margin-bottom:4px}
+.score-desc{font-size:0.8rem;color:var(--text2);line-height:1.5}
+
+/* SCORE GRID */
+.score-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.score-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px}
+.score-card-label{font-size:0.72rem;color:var(--text2);margin-bottom:8px;font-weight:500}
+.score-card-num{font-family:var(--mono);font-size:1.3rem;font-weight:600;margin-bottom:8px}
+.bar-track{height:3px;background:var(--bg3);border-radius:2px}
+.bar-fill{height:100%;border-radius:2px;transition:width 1s ease}
+.bar-green{background:linear-gradient(90deg,#2ECC71,#1db954)}
+.bar-amber{background:linear-gradient(90deg,#f59e0b,#d97706)}
+.bar-red{background:linear-gradient(90deg,#ef4444,#dc2626)}
+
+/* CRITICAL */
+.critical-block{background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.18);border-radius:12px;padding:22px;margin-bottom:20px}
+.critical-head{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.c-dot{width:7px;height:7px;border-radius:50%;background:var(--red);animation:pulse-r 2s infinite}
+@keyframes pulse-r{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,0.4)}50%{box-shadow:0 0 0 5px rgba(239,68,68,0)}}
+.critical-lbl{font-family:var(--mono);font-size:0.65rem;color:var(--red);letter-spacing:1.5px;text-transform:uppercase}
+.critical-text{font-size:0.88rem;color:#fca5a5;line-height:1.6;margin-bottom:14px}
+.fix-head{display:flex;align-items:center;gap:7px;margin-bottom:6px}
+.g-dot{width:5px;height:5px;border-radius:50%;background:var(--green)}
+.fix-lbl{font-family:var(--mono);font-size:0.62rem;color:var(--green);letter-spacing:1.5px;text-transform:uppercase}
+.fix-text{font-size:0.82rem;color:var(--text2);line-height:1.6}
+
+/* SECTION */
+.section{margin-bottom:20px}
+.section-header{display:flex;align-items:center;gap:8px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.section-title{font-family:var(--mono);font-size:0.68rem;color:var(--text2);letter-spacing:2px;text-transform:uppercase}
+
+/* RAW OUTPUT */
+.raw-output{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:22px;white-space:pre-wrap;font-size:0.82rem;color:var(--text2);line-height:1.7;font-family:var(--sans)}
+
+/* REWARD */
+.reward-table{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:12px}
+.reward-row{display:flex;justify-content:space-between;align-items:center;padding:13px 18px;border-bottom:1px solid var(--border)}
+.reward-row:last-child{border-bottom:none}
+.reward-row.hdr{background:var(--bg3);padding:9px 18px}
+.r-range{font-family:var(--mono);font-size:0.73rem;color:var(--text2)}
+.r-amt{font-family:var(--mono);font-size:0.82rem;font-weight:600;color:var(--green)}
+.r-pct{font-family:var(--mono);font-size:0.67rem;color:var(--text3)}
+.reward-total{background:var(--green-dim);border-top:1px solid var(--border2);padding:13px 18px;display:flex;justify-content:space-between}
+.rt-lbl{font-family:var(--mono);font-size:0.68rem;color:var(--green);letter-spacing:1px;text-transform:uppercase}
+.rt-val{font-family:var(--mono);font-size:0.95rem;font-weight:700;color:var(--green)}
+
+/* SHARE */
+.share-block{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:20px}
+.share-link{flex:1;font-family:var(--mono);font-size:0.72rem;color:var(--text2);background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:11px 14px;min-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.share-btn{background:var(--green);color:#080e0c;border:none;border-radius:8px;padding:11px 18px;font-family:var(--sans);font-size:0.78rem;font-weight:700;cursor:pointer;flex-shrink:0}
+.share-btn:active{opacity:0.85}
+
+/* LOADING / ERROR */
+.center{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:12px;text-align:center}
+.loading-dot{width:8px;height:8px;border-radius:50%;background:var(--green);animation:blink 1.4s ease infinite}
+.loading-dot:nth-child(2){animation-delay:0.2s}
+.loading-dot:nth-child(3){animation-delay:0.4s}
+.loading-row{display:flex;gap:6px}
+@keyframes blink{0%,80%,100%{opacity:0.2}40%{opacity:1}}
+.error-msg{color:var(--text2);font-size:0.85rem;margin-top:8px}
+
+footer{margin-top:40px;padding-top:20px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+.f-brand{font-family:var(--mono);font-size:0.62rem;color:var(--text3)}
+.f-brand span{color:var(--green)}
+.f-status{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:0.62rem;color:var(--text3)}
+.s-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:blink 2s infinite}
+.c-green{color:var(--green)}
+.c-amber{color:var(--amber)}
+.c-red{color:var(--red)}
+@media(max-width:580px){.score-hero{flex-direction:column;text-align:center}.score-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="page">
+  <nav>
+    <a href="/" class="nav-brand">
+      <div class="nav-logo">A</div>
+      <span class="nav-name">Alfalf AI</span>
+    </a>
+    <span class="nav-tag">Campaign Intelligence</span>
+  </nav>
+  <div id="root"></div>
+  <footer>
+    <div class="f-brand">Powered by <span>Alfalf AI</span> · Campaign Intelligence Platform</div>
+    <div class="f-status"><div class="s-dot"></div>V0.1 · Beta</div>
+  </footer>
+</div>
+
+<script>
+const API = 'https://alfalf-bot-production.up.railway.app';
+
+function getIdFromUrl() {
+  const parts = window.location.pathname.split('/');
+  return parts[parts.length - 1] || parts[parts.length - 2];
+}
+
+function scoreColor(s) {
+  if (s >= 7) return 'c-green';
+  if (s >= 5) return 'c-amber';
+  return 'c-red';
+}
+
+function barClass(s) {
+  if (s >= 7) return 'bar-green';
+  if (s >= 5) return 'bar-amber';
+  return 'bar-red';
+}
+
+function extractScores(text) {
+  if (!text) return null;
+  const overall = text.match(/overall\s*score[:\s]*([0-9.]+)\s*\/\s*10/i);
+  const retention = text.match(/retention\s*design[:\s]*([0-9.]+)\s*\/\s*10/i);
+  const farming = text.match(/farming\s*resistance[:\s]*([0-9.]+)\s*\/\s*10/i);
+  const fairness = text.match(/fairness[:\s]*([0-9.]+)\s*\/\s*10/i);
+  const product = text.match(/product\s*alignment[:\s]*([0-9.]+)\s*\/\s*10/i);
+  if (!overall) return null;
+  return {
+    overall: parseFloat(overall[1]),
+    retention: retention ? parseFloat(retention[1]) : null,
+    farming: farming ? parseFloat(farming[1]) : null,
+    fairness: fairness ? parseFloat(fairness[1]) : null,
+    product: product ? parseFloat(product[1]) : null
+  };
+}
+
+function extractSection(text, marker) {
+  if (!text) return null;
+  const idx = text.indexOf(marker);
+  if (idx === -1) return null;
+  const after = text.slice(idx + marker.length);
+  const nextSection = after.search(/\n\d+\.\s+[🎯🧩⚙️🔁📊⚠️🧠🧪]/);
+  return nextSection > -1 ? after.slice(0, nextSection).trim() : after.slice(0, 600).trim();
+}
+
+function copyLink() {
+  navigator.clipboard.writeText(window.location.href).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = 'Copied ✓';
+    setTimeout(() => { btn.textContent = 'Copy Link'; }, 2000);
+  });
+}
+
+function renderLoading() {
+  document.getElementById('root').innerHTML = `
+    <div class="center">
+      <div class="loading-row">
+        <div class="loading-dot"></div>
+        <div class="loading-dot"></div>
+        <div class="loading-dot"></div>
+      </div>
+      <div style="font-family:var(--mono);font-size:0.72rem;color:var(--text3);letter-spacing:1px">Loading campaign audit...</div>
+    </div>`;
+}
+
+function renderError(msg) {
+  document.getElementById('root').innerHTML = `
+    <div class="center">
+      <div style="font-size:1.5rem">⚠️</div>
+      <div style="font-weight:700;color:var(--text)">Campaign not found</div>
+      <div class="error-msg">${msg}</div>
+    </div>`;
+}
+
+function renderCampaign(data) {
+  const { projectName, goal, duration, projectType, platform, campaignOutput, campaignScore, createdAt, reward, id } = data;
+  const scores = extractScores(campaignOutput) || {};
+  const overall = campaignScore || scores.overall || 0;
+  const verdictMap = s => s >= 8 ? 'Strong structure · production ready' : s >= 6 ? 'Good structure · fixable weaknesses' : 'Needs significant improvements';
+
+  const criticalMatch = campaignOutput?.match(/critical\s*weakness[:\s]*([\s\S]{20,300}?)(?=\n[🧠🧪]|\n\d+\.|\nWhat to Fix|$)/i);
+  const fixMatch = campaignOutput?.match(/what\s*to\s*fix\s*first[:\s]*([\s\S]{20,300}?)(?=\n[🧠🧪]|\n\d+\.|$)/i);
+  const criticalText = criticalMatch ? criticalMatch[1].trim() : null;
+  const fixText = fixMatch ? fixMatch[1].trim() : null;
+
+  const scoreCards = [
+    { label: 'Retention Design', val: scores.retention },
+    { label: 'Farming Resistance', val: scores.farming },
+    { label: 'Fairness', val: scores.fairness },
+    { label: 'Product Alignment', val: scores.product }
+  ].filter(c => c.val !== null && c.val !== undefined);
+
+  const date = createdAt ? new Date(createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+  const circumference = 2 * Math.PI * 38;
+  const progress = (overall / 10) * circumference;
+
+  document.getElementById('root').innerHTML = `
+    <div>
+      <h1 class="campaign-title">${projectName || 'Untitled Campaign'}</h1>
+      <div class="campaign-meta">
+        ${projectType ? `<span class="tag tag-type">${projectType}</span>` : ''}
+        ${platform ? `<span class="tag tag-platform">${platform}</span>` : ''}
+        ${duration ? `<span class="tag tag-duration">${duration}</span>` : ''}
+      </div>
+      <div class="campaign-id">Campaign ID: ${id?.slice(0,8)}... · ${date}</div>
+
+      <div class="score-hero">
+        <div class="score-circle">
+          <svg style="position:absolute;inset:0;transform:rotate(-90deg)" width="88" height="88" viewBox="0 0 88 88">
+            <circle cx="44" cy="44" r="38" fill="none" stroke="var(--bg3)" stroke-width="4"/>
+            <circle cx="44" cy="44" r="38" fill="none" stroke="var(--green)" stroke-width="4"
+              stroke-dasharray="${progress.toFixed(1)} ${circumference.toFixed(1)}" stroke-linecap="round"/>
+          </svg>
+          <span class="score-num">${overall}</span>
+        </div>
+        <div>
+          <div class="score-label">Campaign Score</div>
+          <div class="score-verdict">${verdictMap(overall)}</div>
+          <div class="score-desc">${goal || ''}</div>
+        </div>
+      </div>
+
+      ${scoreCards.length > 0 ? `
+      <div class="score-grid">
+        ${scoreCards.map(c => `
+          <div class="score-card">
+            <div class="score-card-label">${c.label}</div>
+            <div class="score-card-num ${scoreColor(c.val)}">${c.val} <span style="font-size:0.75rem;color:var(--text3)">/10</span></div>
+            <div class="bar-track"><div class="bar-fill ${barClass(c.val)}" style="width:${c.val * 10}%"></div></div>
+          </div>`).join('')}
+      </div>` : ''}
+
+      ${criticalText ? `
+      <div class="critical-block">
+        <div class="critical-head"><div class="c-dot"></div><div class="critical-lbl">Critical Weakness</div></div>
+        <p class="critical-text">${criticalText}</p>
+        ${fixText ? `
+        <div class="fix-head"><div class="g-dot"></div><div class="fix-lbl">What to Fix First</div></div>
+        <p class="fix-text">${fixText}</p>` : ''}
+      </div>` : ''}
+
+      <div class="section">
+        <div class="section-header"><span class="section-title">Full Campaign Output</span></div>
+        <div class="raw-output">${campaignOutput || 'No output available'}</div>
+      </div>
+
+      ${reward && reward.breakdown && reward.breakdown.length > 0 ? `
+      <div class="section">
+        <div class="section-header"><span class="section-title">Reward Structure</span></div>
+        <div class="reward-table">
+          <div class="reward-row hdr">
+            <span style="font-family:var(--mono);font-size:0.62rem;color:var(--text3)">WINNERS</span>
+            <span style="font-family:var(--mono);font-size:0.62rem;color:var(--text3)">PAYOUT</span>
+            <span style="font-family:var(--mono);font-size:0.62rem;color:var(--text3)">SHARE</span>
+          </div>
+          ${reward.breakdown.map(t => `
+          <div class="reward-row">
+            <span class="r-range">Winners ${t.range}</span>
+            <span class="r-amt">$${t.perUser} each</span>
+            <span class="r-pct">${t.percentage}%</span>
+          </div>`).join('')}
+          <div class="reward-total">
+            <span class="rt-lbl">Total · ${reward.totalWinners} winners</span>
+            <span class="rt-val">$${reward.rewardPool}</span>
+          </div>
+        </div>
+      </div>` : ''}
+
+      <div class="share-block">
+        <div class="share-link">${window.location.href}</div>
+        <button class="share-btn" id="copyBtn" onclick="copyLink()">Copy Link</button>
+      </div>
+    </div>`;
+}
+
+async function init() {
+  const id = getIdFromUrl();
+  if (!id || id === 'campaign') { renderError('No campaign ID found in URL.'); return; }
+  renderLoading();
+  try {
+    const res = await fetch(`${API}/api/share/${id}`);
+    if (!res.ok) { renderError('Campaign not found or has expired.'); return; }
+    const data = await res.json();
+    renderCampaign(data);
+  } catch(e) {
+    renderError('Could not connect to Alfalf AI server.');
+  }
+}
+
+init();
+</script>
+</body>
+</html>

@@ -215,6 +215,14 @@ function renderError(msg) {
     </div>`;
 }
 
+  function cleanMarkdown(text) {
+  if (!text) return '';
+  return text
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/\n/g, '<br>');
+}
+  
 function renderCampaign(data) {
   const { projectName, goal, duration, projectType, platform, campaignOutput, campaignScore, createdAt, reward, id } = data;
   const scores = extractScores(campaignOutput) || {};
